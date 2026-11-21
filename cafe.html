@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daybreak Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#0f2e23;
+  --forest-2:#163d2f;
+  --mint:#bfe3d0;
+  --caramel:#e3a03c;
+  --milk:#fbf8f2;
+  --bean:#3b2216;
+  --ink:#0b1f18;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:"Work Sans",system-ui,-apple-system,sans-serif;background:var(--forest);color:var(--milk);overflow-x:hidden;line-height:1.6}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--caramel);outline-offset:3px}
+.display{font-family:Unbounded,system-ui,sans-serif;font-weight:800;line-height:.95;letter-spacing:-.02em}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-style:italic;letter-spacing:0}
+.ph{position:relative;overflow:hidden;background:linear-gradient(140deg,#2c5a46,#0f2e23 55%,#5b3a24)}
+
+/* split text */
+.split .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.2em;margin-bottom:-.2em}
+.split .w>i{display:inline-block;font-style:inherit;transform:translateY(105%);transition:transform 1s var(--ease);transition-delay:calc(var(--i)*55ms)}
+.split.in .w>i{transform:none}
+[data-reveal]{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0ms)}
+[data-reveal].in{opacity:1;transform:none}
+.clip{clip-path:inset(18% 10% 18% 10% round 24px);transition:clip-path 1.3s var(--ease)}
+.clip img{transform:scale(1.25);transition:transform 1.6s var(--ease)}
+.clip.in{clip-path:inset(0 0 0 0 round 24px)}
+.clip.in img{transform:scale(1)}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 5vw 14px;transition:background .4s,backdrop-filter .4s}
+nav.solid{background:rgba(15,46,35,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.logo{font-family:Unbounded;font-weight:800;font-size:1.05rem;text-decoration:none;letter-spacing:-.02em}
+.status{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:500;background:rgba(251,248,242,.12);border:1px solid rgba(251,248,242,.18);padding:7px 13px;border-radius:999px}
+.status i{width:8px;height:8px;border-radius:50%;background:#5ee39b;box-shadow:0 0 0 0 rgba(94,227,155,.6);animation:ping 2s infinite}
+.status.closed i{background:#ff8a6b;animation:none}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(94,227,155,0)}100%{box-shadow:0 0 0 0 rgba(94,227,155,0)}}
+
+/* hero */
+.hero{position:relative;height:100svh;min-height:600px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5vw calc(40px + env(safe-area-inset-bottom))}
+.hero .ph{position:absolute;inset:0;z-index:0}
+.hero .ph img{transform:scale(calc(1.12 + var(--hp,0)*.18)) translateY(calc(var(--hp,0)*40px));transition:opacity 1.4s}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(11,31,24,.35) 0%,rgba(11,31,24,.05) 35%,rgba(11,31,24,.85) 85%,var(--forest) 100%)}
+.hero > *:not(.ph){position:relative;z-index:2}
+.hero h1{font-size:15.5vw;color:var(--milk);white-space:nowrap}
+.hero h1 .serif{font-size:max(.36em,1.6rem);white-space:normal;display:block;color:var(--mint);margin-bottom:.12em;letter-spacing:0}
+.hero-row{display:flex;flex-wrap:wrap;gap:18px 40px;align-items:flex-end;justify-content:space-between;margin-top:22px}
+.hero-row p{max-width:30ch;font-size:1.08rem;color:rgba(251,248,242,.85)}
+.cue{display:flex;align-items:center;gap:12px;font-size:.85rem;opacity:.8}
+.cue span{width:1px;height:46px;background:rgba(251,248,242,.3);position:relative;overflow:hidden}
+.cue span::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:var(--milk);animation:drip 1.8s infinite var(--ease)}
+@keyframes drip{to{top:110%}}
+
+/* marquee */
+.marq{background:var(--caramel);color:var(--bean);overflow:hidden;padding:16px 0;transform:rotate(-2deg) scale(1.04);margin:30px 0}
+.marq-in{display:flex;width:max-content;gap:36px;font-family:Unbounded;font-weight:800;font-size:clamp(1.4rem,5vw,2.4rem);white-space:nowrap;animation:slide 26s linear infinite}
+.marq-in em{font-family:"Instrument Serif";font-weight:400}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* pour story */
+.pour{height:420vh;position:relative}
+.pour-stage{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4vw;padding:80px 5vw 40px;overflow:hidden}
+.pour-copy{position:relative;height:300px}
+.beat{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(30px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.beat.on{opacity:1;transform:none}
+.beat small{font-weight:600;color:var(--caramel);font-size:.9rem;margin-bottom:10px}
+.beat h2{font-size:clamp(2.3rem,6vw,4.6rem);color:var(--mint)}
+.beat p{max-width:32ch;margin-top:14px;font-size:1.05rem;color:rgba(251,248,242,.85)}
+.cup{justify-self:center;width:min(440px,100%);position:relative}
+.cup svg{width:100%;overflow:visible}
+.wave{animation:wave 2.2s linear infinite}
+@keyframes wave{to{transform:translateX(-60px)}}
+#steam path{animation:rise 2.4s ease-in-out infinite}
+#steam .s2{animation-delay:.4s}#steam .s3{animation-delay:.8s}
+@keyframes rise{0%,100%{transform:translateY(0);opacity:.9}50%{transform:translateY(-10px);opacity:.35}}
+.track{position:absolute;left:5vw;bottom:34px;display:flex;gap:8px;align-items:center;font-size:.8rem;color:rgba(251,248,242,.7)}
+.track b{display:block;width:34px;height:3px;border-radius:3px;background:rgba(251,248,242,.2);overflow:hidden;position:relative}
+.track b::after{content:"";position:absolute;inset:0;background:var(--caramel);transform:scaleX(var(--f,0));transform-origin:left}
+
+/* menu */
+.menu{background:var(--milk);color:var(--ink);border-radius:36px 36px 0 0;padding:100px 5vw 90px;position:relative;z-index:3}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:34px}
+.sec-head h2{font-size:clamp(2.6rem,8vw,5.6rem)}
+.sec-head h2 .serif{color:#2c7a5a}
+.tabs{display:inline-flex;position:relative;background:#ece6da;border-radius:999px;padding:5px}
+.tab{position:relative;z-index:1;font:inherit;font-weight:600;border:0;background:none;color:var(--ink);padding:10px 20px;border-radius:999px;cursor:pointer;transition:color .35s}
+.tab[aria-selected="true"]{color:var(--milk)}
+.pill{position:absolute;top:5px;left:0;height:calc(100% - 10px);background:var(--forest);border-radius:999px;transition:transform .55s var(--ease),width .55s var(--ease)}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:14px 40px}
+.item{display:grid;grid-template-columns:78px 1fr auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid #e3dccd;opacity:0;transform:translateY(16px);animation:itemIn .6s var(--ease) forwards;animation-delay:calc(var(--i)*70ms)}
+@keyframes itemIn{to{opacity:1;transform:none}}
+.item .ph{width:78px;height:78px;border-radius:50%}
+.item h3{font-family:Unbounded;font-weight:600;font-size:1rem;letter-spacing:-.01em}
+.item p{font-size:.9rem;color:#5b6660;line-height:1.4}
+.item .pr{font-weight:600;white-space:nowrap}
+.badge{display:inline-block;font-size:.7rem;font-weight:600;background:var(--caramel);color:var(--bean);padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+
+.addx{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--forest);background:none;color:var(--forest);font:inherit;font-size:1.3rem;font-weight:600;line-height:1;cursor:pointer;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .25s,color .25s}
+.addx:active{transform:scale(.85)}
+.addx.ok{background:var(--forest);color:var(--milk)}
+.item{grid-template-columns:78px 1fr auto auto}
+.obar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:45;max-width:560px;margin:0 auto;background:var(--forest);color:var(--milk);border-radius:22px;padding:12px 12px 12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 18px 40px rgba(0,0,0,.35);transform:translateY(160%);transition:transform .6s var(--ease)}
+.obar.on{transform:none}
+.obar small{display:block;color:var(--mint);font-size:.8rem}
+.obar b{font-family:Unbounded;font-weight:600}
+.obar button{border:0;background:var(--caramel);color:var(--bean);font:inherit;font-weight:600;padding:12px 18px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.obar.done{background:var(--caramel);color:var(--bean)}
+.obar.done small{color:var(--bean)}
+.obar.done button{background:var(--bean);color:var(--milk)}
+/* gallery (horizontal) */
+.gal{height:300vh;position:relative;background:var(--milk);color:var(--ink)}
+.gal-stage{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.gal-head{padding:0 5vw 26px}
+.gal-head h2{font-size:clamp(2.2rem,7vw,4.6rem)}
+.gal-row{display:flex;gap:18px;padding:0 5vw;width:max-content;will-change:transform}
+.shot{width:min(72vw,440px);flex-shrink:0}
+.shot .ph{height:min(56svh,480px);border-radius:26px}
+.shot .ph img{transform:scale(1.15) translateX(var(--px,0px))}
+.shot figcaption{display:flex;justify-content:space-between;margin-top:12px;font-weight:500}
+.shot figcaption span{color:#5b6660}
+
+/* beans stacked cards */
+.beans{background:var(--forest);padding:110px 5vw 60px}
+.beans > h2{font-size:clamp(2.4rem,8vw,5rem);margin-bottom:12px;color:var(--mint)}
+.beans > p{max-width:42ch;margin-bottom:50px;color:rgba(251,248,242,.8)}
+.stack{position:relative}
+.card{position:sticky;top:90px;min-height:62svh;border-radius:30px;padding:30px;margin-bottom:40px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:stretch;transform-origin:50% 0;color:var(--ink)}
+.card:nth-child(1){background:#e9c27d}
+.card:nth-child(2){background:#bfe3d0;top:110px}
+.card:nth-child(3){background:#f2b8a2;top:130px}
+.card .meta{display:flex;flex-direction:column;justify-content:space-between}
+.card h3{font-family:Unbounded;font-weight:800;font-size:clamp(1.8rem,5vw,3.4rem);line-height:1;letter-spacing:-.02em}
+.notes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.notes span{border:1.5px solid var(--ink);border-radius:999px;padding:4px 12px;font-size:.85rem;font-weight:500}
+.card .ph{border-radius:20px;min-height:220px}
+.roast{display:flex;gap:4px;margin-top:6px}
+.roast i{width:22px;height:8px;border-radius:4px;background:rgba(11,31,24,.18)}
+.roast i.f{background:var(--ink)}
+
+/* visit */
+.visit{padding:100px 5vw;display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center}
+.visit h2{font-size:clamp(2.6rem,8vw,5.4rem);color:var(--milk)}
+.visit h2 .serif{color:var(--mint)}
+.visit .lead{margin:16px 0 26px;max-width:38ch;color:rgba(251,248,242,.85)}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--caramel);color:var(--bean);font-weight:600;padding:15px 26px;border-radius:999px;text-decoration:none;transition:transform .3s var(--ease)}
+.btn:active{transform:scale(.96)}
+.hours{list-style:none;border-top:1px solid rgba(251,248,242,.2)}
+.hours li{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(251,248,242,.2);transition:color .3s}
+.hours li.today{color:var(--caramel);font-weight:600}
+.hours li.today span::after{content:" · today";font-weight:500}
+footer{padding:26px 5vw calc(26px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:.85rem;color:rgba(251,248,242,.6);border-top:1px solid rgba(251,248,242,.12)}
+
+@media (max-width:760px){
+  .pour{height:330vh}
+  .gal{height:260vh}
+  .shot figcaption{flex-direction:column;gap:0}
+  .pour-stage{grid-template-columns:1fr;grid-template-rows:1fr auto;padding-top:90px;padding-bottom:70px;align-items:end}
+  .cup{width:min(360px,86vw);order:-1;align-self:center}
+  .pour-copy{height:190px}
+  .card{grid-template-columns:1fr;min-height:auto}
+  .card .ph{min-height:200px;order:-1}
+  .visit{grid-template-columns:1fr}
+  .items{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .split .w>i,[data-reveal]{transform:none;opacity:1}
+  .clip{clip-path:none}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="#top">daybreak</a>
+  <span class="status" id="status"><i></i><span id="statusText">Open now</span></span>
+</nav>
+
+<header class="hero" id="top">
+  <div class="ph"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80" alt="" onerror="this.remove()"></div>
+  <h1 class="display split" data-split><span class="serif">good mornings start at</span>daybreak</h1>
+  <div class="hero-row">
+    <p data-reveal style="--d:500ms">Specialty coffee, fresh bakes and a table that's yours for as long as you like.</p>
+    <div class="cue" data-reveal style="--d:700ms"><span></span>Scroll to pour</div>
+  </div>
+</header>
+
+<div class="marq" aria-hidden="true"><div class="marq-in">
+  <span>Flat white</span><em>&</em><span>Spanish latte</span><em>&</em><span>Cold brew</span><em>&</em><span>Matcha</span><em>&</em><span>Cortado</span><em>&</em>
+  <span>Flat white</span><em>&</em><span>Spanish latte</span><em>&</em><span>Cold brew</span><em>&</em><span>Matcha</span><em>&</em><span>Cortado</span><em>&</em>
+</div></div>
+
+<section class="pour" id="pour">
+  <div class="pour-stage">
+    <div class="pour-copy">
+      <div class="beat on"><small>Step 1 of 4</small><h2 class="display">Beans, ground fresh.</h2><p>Every cup starts 30 seconds before you get it.</p></div>
+      <div class="beat"><small>Step 2 of 4</small><h2 class="display">A double shot.</h2><p>Single-origin espresso, pulled for 28 seconds.</p></div>
+      <div class="beat"><small>Step 3 of 4</small><h2 class="display">Silky milk.</h2><p>Steamed to 60°C so it stays sweet, never burnt.</p></div>
+      <div class="beat"><small>Step 4 of 4</small><h2 class="display">Finished by hand.</h2><p>Every barista has their own heart. This one's yours.</p></div>
+    </div>
+    <div class="cup" aria-hidden="true">
+      <svg viewBox="0 0 340 330">
+        <defs>
+          <clipPath id="inner"><path d="M58 96 H262 L246 252 Q160 278 74 252 Z"/></clipPath>
+          <linearGradient id="ceramic" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#f1ece3"/><stop offset="1" stop-color="#d8d0c2"/></linearGradient>
+          <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="165" cy="296" rx="150" ry="22" fill="url(#shadow)"/>
+        <ellipse cx="165" cy="284" rx="140" ry="24" fill="#f1ece3" stroke="#d8d0c2" stroke-width="3"/>
+        <ellipse cx="165" cy="280" rx="96" ry="12" fill="#e2dacb"/>
+        <path d="M256 128 C318 118 322 214 244 222" fill="none" stroke="url(#ceramic)" stroke-width="20" stroke-linecap="round"/>
+        <path d="M50 88 H270 L252 256 Q160 290 68 256 Z" fill="url(#ceramic)"/>
+        <g clip-path="url(#inner)">
+          <rect x="40" y="90" width="260" height="200" fill="#efe7da"/>
+          <g id="liquid" transform="translate(0 270)">
+            <path class="wave" id="liqFill" fill="#3b2216" d="M0 0 q15 -7 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 V220 H0 Z"/>
+          </g>
+          <ellipse id="crema" cx="160" cy="120" rx="110" ry="16" fill="#f3e3c8" opacity="0"/>
+          <g id="art" opacity="0" transform="translate(160 150) scale(.2)">
+            <path d="M0 -6 C-14 -30 -52 -24 -50 4 C-48 28 -12 40 0 58 C12 40 48 28 50 4 C52 -24 14 -30 0 -6Z" fill="#fff8ee"/>
+            <path d="M0 -2 C-8 -16 -30 -12 -28 4 C-26 18 -8 26 0 38 C8 26 26 18 28 4 C30 -12 8 -16 0 -2Z" fill="#c99566"/>
+            <path d="M0 4 C-4 -4 -14 -2 -13 6 C-12 13 -4 17 0 22 C4 17 12 13 13 6 C14 -2 4 -4 0 4Z" fill="#fff8ee"/>
+          </g>
+        </g>
+        <path d="M50 88 H270" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        <path d="M74 110 L84 236" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+        <g id="steam" fill="none" stroke="#bfe3d0" stroke-width="5" stroke-linecap="round" opacity="0">
+          <path class="s1" d="M120 70 q-14 -18 0 -36 q14 -18 0 -36"/>
+          <path class="s2" d="M160 62 q-14 -18 0 -36 q14 -18 0 -36"/>
+          <path class="s3" d="M200 70 q-14 -18 0 -36 q14 -18 0 -36"/>
+        </g>
+        <g id="beans">
+          <ellipse cx="96" cy="40" rx="11" ry="15" fill="#3b2216" transform="rotate(-30 96 40)"/>
+          <ellipse cx="160" cy="20" rx="11" ry="15" fill="#4a2a1a" transform="rotate(20 160 20)"/>
+          <ellipse cx="226" cy="44" rx="11" ry="15" fill="#3b2216" transform="rotate(50 226 44)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="track" id="track"><b></b><b></b><b></b><b></b></div>
+  </div>
+</section>
+
+<section class="menu" id="menu">
+  <div class="sec-head">
+    <h2 class="display split" data-split>The <span class="serif">menu</span></h2>
+    <div class="tabs" role="tablist" id="tabs">
+      <span class="pill" id="pill"></span>
+      <button class="tab" role="tab" aria-selected="true" data-cat="hot">Hot</button>
+      <button class="tab" role="tab" aria-selected="false" data-cat="cold">Cold</button>
+      <button class="tab" role="tab" aria-selected="false" data-cat="bites">Bites</button>
+    </div>
+  </div>
+  <div class="items" id="items" role="tabpanel"></div>
+  <p style="margin-top:22px;color:#5b6660">Tap + to order ahead. Skip the queue and pick it up at the counter.</p>
+</section>
+
+<section class="gal" id="gal">
+  <div class="gal-stage">
+    <div class="gal-head"><h2 class="display split" data-split>Pick your <span class="serif">corner</span></h2></div>
+    <div class="gal-row" id="galRow">
+      <figure class="shot"><div class="ph"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=900&q=80" alt="Sunny seating area" loading="lazy" onerror="this.remove()"></div><figcaption>The window seats <span>Best before 11 am</span></figcaption></figure>
+      <figure class="shot"><div class="ph"><img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=900&q=80" alt="Coffee bar counter" loading="lazy" onerror="this.remove()"></div><figcaption>The bar <span>Watch the pour</span></figcaption></figure>
+      <figure class="shot"><div class="ph"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80" alt="Latte with art" loading="lazy" onerror="this.remove()"></div><figcaption>The quiet room <span>Laptops welcome</span></figcaption></figure>
+      <figure class="shot"><div class="ph"><img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=900&q=80" alt="Coffee beans and cup" loading="lazy" onerror="this.remove()"></div><figcaption>The roastery <span>Mondays only</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="beans">
+  <h2 class="display split" data-split>This month's <span class="serif">beans</span></h2>
+  <p data-reveal>Three origins on rotation. Ask for any of them as espresso, filter or cold brew.</p>
+  <div class="stack" id="stack">
+    <article class="card">
+      <div class="meta"><div><h3>Ethiopia Guji</h3><div class="notes"><span>Blueberry</span><span>Jasmine</span><span>Honey</span></div></div><div><small>Roast</small><div class="roast"><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div></div></div>
+      <div class="ph"><img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=900&q=80" alt="" loading="lazy" onerror="this.remove()"></div>
+    </article>
+    <article class="card">
+      <div class="meta"><div><h3>Colombia Huila</h3><div class="notes"><span>Caramel</span><span>Red apple</span><span>Cocoa</span></div></div><div><small>Roast</small><div class="roast"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></div></div></div>
+      <div class="ph"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=900&q=80" alt="" loading="lazy" onerror="this.remove()"></div>
+    </article>
+    <article class="card">
+      <div class="meta"><div><h3>Brazil Cerrado</h3><div class="notes"><span>Hazelnut</span><span>Dark chocolate</span></div></div><div><small>Roast</small><div class="roast"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div></div></div>
+      <div class="ph"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=80" alt="" loading="lazy" onerror="this.remove()"></div>
+    </article>
+  </div>
+</section>
+
+<section class="visit">
+  <div>
+    <h2 class="display split" data-split>Come sit <span class="serif">with us.</span></h2>
+    <p class="lead" data-reveal>14 Main Boulevard, Gulberg. Plugs at every table, fast Wi-Fi and free refills on filter coffee.</p>
+    <a class="btn" href="#menu" data-reveal style="--d:120ms">See the menu</a>
+  </div>
+  <ul class="hours" id="hours" data-reveal>
+    <li data-days="1,2,3,4"><span>Monday – Thursday</span><b>8 am – 11 pm</b></li>
+    <li data-days="5"><span>Friday</span><b>8 am – 12 am</b></li>
+    <li data-days="6,0"><span>Saturday – Sunday</span><b>9 am – 12 am</b></li>
+  </ul>
+</section>
+
+<div class="obar" id="obar" aria-live="polite"><div><small id="oInfo">Pickup order</small><b id="oTotal">Rs 0</b></div><button id="oBtn" type="button">Place order</button></div>
+
+<footer>
+  <span>Daybreak Coffee, Lahore</span>
+  <span><a href="index.html" style="color:inherit">Sample design by Zoomies Studio</a>. Not a real café.</span>
+</footer>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var IMG = 'https://images.unsplash.com/';
+  var Q = '?auto=format&fit=crop&w=300&q=70';
+
+  /* split headings into words */
+  document.querySelectorAll('[data-split]').forEach(function(el){
+    var n = 0;
+    (function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(c){
+        if (c.nodeType === 3){
+          var frag = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach(function(part){
+            if (!part) return;
+            if (/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(' ')); return; }
+            var w = document.createElement('span'); w.className='w';
+            var i = document.createElement('i'); i.textContent = part; i.style.setProperty('--i', n++);
+            w.appendChild(i); frag.appendChild(w);
+          });
+          node.replaceChild(frag, c);
+        } else if (c.nodeType === 1) walk(c);
+      });
+    })(el);
+  });
+
+  /* reveal on view */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.15, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('[data-split],[data-reveal],.clip').forEach(function(el){ io.observe(el); });
+  requestAnimationFrame(function(){ document.querySelector('.hero h1').classList.add('in'); });
+
+  /* open / closed status from real time */
+  var now = new Date(), d = now.getDay(), h = now.getHours() + now.getMinutes()/60;
+  var open = d===5 ? [8,24] : (d===6||d===0) ? [9,24] : [8,23];
+  var st = document.getElementById('status'), stx = document.getElementById('statusText');
+  if (h >= open[0] && h < open[1]) stx.textContent = 'Open · closes ' + (open[1]===24 ? 'midnight' : '11 pm');
+  else { st.classList.add('closed'); stx.textContent = 'Closed · opens ' + (h < open[0] ? open[0] : (d===5||d===6 ? 9 : 8)) + ' am'; }
+  document.querySelectorAll('#hours li').forEach(function(li){ if (li.dataset.days.split(',').indexOf(String(d)) > -1) li.classList.add('today'); });
+
+  /* menu */
+  var menu = {
+    hot:[
+      ['photo-1509042239860-f550ce710b93','Flat white','Double shot, velvety milk','650',1],
+      ['photo-1495474472287-4d71bcdd2085','Spanish latte','Condensed milk, a little cinnamon','750'],
+      ['photo-1514432324607-a09d9b4aefdd','Cortado','Equal parts espresso and milk','600'],
+      ['photo-1511920170033-f8396924c348','Pour-over','Ask for this month\'s origin','800']],
+    cold:[
+      ['photo-1461023058943-07fcbe16d735','Cold brew','Steeped for 18 hours','700',1],
+      ['photo-1447933601403-0c6688de566e','Iced latte','Over big clear ice','750'],
+      ['photo-1495474472287-4d71bcdd2085','Iced Spanish latte','Our bestseller, cold','800'],
+      ['photo-1511920170033-f8396924c348','Espresso tonic','Bright, fizzy, bitter-sweet','850']],
+    bites:[
+      ['photo-1554118811-1e0d58224f24','Almond croissant','Twice-baked, flaky','550',1],
+      ['photo-1501339847302-ac426a4a7cbb','Chicken pesto sandwich','On toasted sourdough','950'],
+      ['photo-1447933601403-0c6688de566e','Brown butter cookie','Sea salt on top','350'],
+      ['photo-1509042239860-f550ce710b93','Basque cheesecake','Burnt top, soft middle','800']]
+  };
+  var items = document.getElementById('items');
+  function render(cat){
+    items.innerHTML = menu[cat].map(function(m,i){
+      return '<div class="item" style="--i:'+i+'"><div class="ph"><img src="'+IMG+m[0]+Q+'" alt="" loading="lazy" onerror="this.remove()"></div>'+
+        '<div><h3>'+m[1]+(m[4]?'<span class="badge">Popular</span>':'')+'</h3><p>'+m[2]+'</p></div><span class="pr">Rs '+m[3]+'</span>'+
+        '<button class="addx" type="button" data-n="'+m[1]+'" data-p="'+m[3]+'" aria-label="Add '+m[1]+' to pickup order">+</button></div>';
+    }).join('');
+  }
+  var pill = document.getElementById('pill'), tabs = document.querySelectorAll('.tab');
+  function place(t){ pill.style.width = t.offsetWidth+'px'; pill.style.transform = 'translateX('+t.offsetLeft+'px)'; }
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(o){ o.setAttribute('aria-selected','false'); });
+      t.setAttribute('aria-selected','true'); place(t); render(t.dataset.cat);
+    });
+  });
+  render('hot'); place(tabs[0]);
+
+  /* order ahead */
+  var order = [], obar = document.getElementById('obar'), oBtn = document.getElementById('oBtn'), placed = false;
+  function oSync(){
+    var n = order.length, t = order.reduce(function(a,o){ return a + o.p; }, 0);
+    document.getElementById('oInfo').textContent = 'Pickup order · ' + n + ' item' + (n === 1 ? '' : 's');
+    document.getElementById('oTotal').textContent = 'Rs ' + t.toLocaleString('en-US');
+    obar.classList.toggle('on', n > 0 || placed);
+  }
+  items.addEventListener('click', function(e){
+    var b = e.target.closest('.addx'); if (!b) return;
+    if (placed){ placed = false; obar.classList.remove('done'); oBtn.textContent = 'Place order'; }
+    order.push({n:b.dataset.n, p:+b.dataset.p});
+    b.textContent = '✓'; b.classList.add('ok');
+    setTimeout(function(){ b.textContent = '+'; b.classList.remove('ok'); }, 1000);
+    oSync();
+  });
+  oBtn.addEventListener('click', function(){
+    if (placed){ placed = false; obar.classList.remove('done'); oSync(); return; }
+    if (!order.length) return;
+    var ready = new Date(Date.now() + 12*60000), hh = ready.getHours(), mm = ready.getMinutes();
+    var no = 300 + Math.floor(Math.random()*600);
+    placed = true; order = [];
+    obar.classList.add('done');
+    document.getElementById('oInfo').textContent = 'Order #' + no + ' sent to the barista';
+    document.getElementById('oTotal').textContent = 'Ready at ' + ((hh % 12) || 12) + ':' + (mm < 10 ? '0' : '') + mm + (hh < 12 ? ' am' : ' pm');
+    oBtn.textContent = 'Close';
+  });
+  addEventListener('load', function(){ place(document.querySelector('.tab[aria-selected="true"]')); });
+  addEventListener('resize', function(){ place(document.querySelector('.tab[aria-selected="true"]')); });
+
+  /* scroll-driven scenes */
+  var nav = document.getElementById('nav'), hero = document.querySelector('.hero');
+  var pour = document.getElementById('pour'), beats = document.querySelectorAll('.beat'), bars = document.querySelectorAll('#track b');
+  var liquid = document.getElementById('liquid'), liqFill = document.getElementById('liqFill');
+  var crema = document.getElementById('crema'), art = document.getElementById('art'), steam = document.getElementById('steam'), beansG = document.getElementById('beans');
+  var gal = document.getElementById('gal'), galRow = document.getElementById('galRow'), shots = document.querySelectorAll('.shot .ph img');
+  var cards = document.querySelectorAll('.card');
+  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+  function seg(p,a,b){ return clamp((p-a)/(b-a),0,1); }
+  function mix(c1,c2,t){ return 'rgb('+c1.map(function(v,i){return Math.round(v+(c2[i]-v)*t);}).join(',')+')'; }
+  function progress(el){ var r = el.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight), 0, 1); }
+
+  var ticking = false;
+  function frame(){
+    ticking = false;
+    var y = scrollY, vh = innerHeight;
+    nav.classList.toggle('solid', y > 40);
+    hero.style.setProperty('--hp', clamp(y / vh, 0, 1));
+
+    // pour story
+    var p = reduce ? 1 : progress(pour);
+    var stage = p < .22 ? 0 : p < .48 ? 1 : p < .74 ? 2 : 3;
+    beats.forEach(function(b,i){ b.classList.toggle('on', i === stage); });
+    bars.forEach(function(b,i){ b.style.setProperty('--f', clamp(p*4 - i, 0, 1)); });
+    var fallB = seg(p, 0, .2);
+    beansG.style.transform = 'translateY(' + (fallB*150) + 'px) scale(' + (1 - fallB*.6) + ')';
+    beansG.style.transformOrigin = '160px 40px';
+    beansG.style.opacity = 1 - seg(p, .14, .22);
+    var shot = seg(p, .22, .46), milk = seg(p, .48, .72);
+    var level = 270 - shot*80 - milk*70;          // liquid top y
+    liquid.setAttribute('transform', 'translate(0 ' + level + ')');
+    liqFill.setAttribute('fill', mix([59,34,22],[176,122,76], milk));
+    crema.setAttribute('opacity', seg(p, .66, .74));
+    crema.setAttribute('cy', level + 6);
+    var a = seg(p, .76, .9);
+    art.setAttribute('opacity', a);
+    art.setAttribute('transform', 'translate(160 '+ (level + 34) +') scale(' + (.2 + a*.95) + ')');
+    steam.setAttribute('opacity', seg(p, .86, .96));
+
+    // horizontal gallery
+    var g = progress(gal), dist = Math.max(0, galRow.scrollWidth - innerWidth);
+    galRow.style.transform = 'translate3d(' + (-g*dist) + 'px,0,0)';
+    shots.forEach(function(im,i){ im.style.setProperty('--px', ((g - i/4) * -40) + 'px'); });
+
+    // stacked bean cards shrink as the next one covers them
+    cards.forEach(function(c,i){
+      var next = cards[i+1]; if (!next) return;
+      var r = next.getBoundingClientRect(), t = clamp(1 - (r.top - 100) / (vh*.7), 0, 1);
+      c.style.transform = 'scale(' + (1 - t*.06) + ')';
+      c.style.filter = 'brightness(' + (1 - t*.25) + ')';
+    });
+  }
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+  frame();
+})();
+</script>
+</body>
+</html>
